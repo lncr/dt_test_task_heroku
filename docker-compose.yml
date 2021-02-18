@@ -23,8 +23,10 @@ services:
       - ./news/.env.dev
     volumes:
       - pgdata:/var/lib/postgresql/data
+
   redis:
     image: redis:alpine
+
   celery:
     restart: always
     build:
@@ -38,5 +40,17 @@ services:
       - db
       - redis
       - app
+  celery-beat:
+    build:
+      context: .
+    command: celery -A news beat -l info
+    volumes:
+      - ./news:/news
+    links:
+      - celery
+      - redis
+    depends_on:
+      - celery
+      - redis
 volumes:
   pgdata:
