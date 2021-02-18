@@ -3,19 +3,21 @@ from rest_framework import serializers
 from .models import Post, Comment
 
 
-class RepresentationMixIn:
+class PostSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='post_detail_url',
+        lookup_field='id'
+    )
+
+    class Meta:
+        model = Post
+        fields = ['id', 'title', 'url', 'creation_date', 'upvotes_amount', ]
+        read_only_fields = ['creation_date', 'upvotes_amount', ]
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['author_name'] = instance.author.username
         return representation
-
-
-class PostSerializer(serializers.HyperlinkedModelSerializer, RepresentationMixIn):
-
-    class Meta:
-        fields = ['id', 'title', 'url', 'creation_date', 'upvotes_amount', ]
-        read_only_fields = ['creation_date', 'upvotes_amount', ]
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -24,14 +26,14 @@ class PostSerializer(serializers.HyperlinkedModelSerializer, RepresentationMixIn
         return new_post
 
 
-class CommentSerializer(serializers.ModelSerializer, RepresentationMixIn):
+class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
+        model = Comment
         fields = ['id', 'content', 'creation_date']
         read_only_fields = ['creation_date', ]
 
-    def create(self, validated_data):
-        request = self.context.get('request')
-        author = request.user
-        new_comment = Comment.objects.create(author=author, content=validated_data['content'])
-        return new_comment
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['author_name'] = instance.author.username
+        return representation
