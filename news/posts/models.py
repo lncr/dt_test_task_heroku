@@ -10,6 +10,7 @@ class Post(models.Model):
                                related_name='posts', null=True)
     title = models.CharField(max_length=255)
     creation_date = models.DateTimeField(auto_now_add=True)
+    upvotes_amount = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -29,3 +30,8 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ('-id', )
+
+
+class Upvote(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='upvotes')
+    receiver = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='upvotes')

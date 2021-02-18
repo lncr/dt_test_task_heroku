@@ -14,8 +14,8 @@ class RepresentationMixIn:
 class PostSerializer(serializers.HyperlinkedModelSerializer, RepresentationMixIn):
 
     class Meta:
-        fields = ['id', 'title', 'url', 'creation_date', ]
-        read_only_fields = ['creation_date', ]
+        fields = ['id', 'title', 'url', 'creation_date', 'upvotes_amount', ]
+        read_only_fields = ['creation_date', 'upvotes_amount', ]
 
     def create(self, validated_data):
         request = self.context.get('request')
