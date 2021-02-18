@@ -9,21 +9,43 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('posts', '0001_initial'),
+        ("posts", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='post',
-            name='upvotes_amount',
+            model_name="post",
+            name="upvotes_amount",
             field=models.IntegerField(default=0),
         ),
         migrations.CreateModel(
-            name='Upvote',
+            name="Upvote",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('receiver', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='upvotes', to='posts.post')),
-                ('sender', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='upvotes', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "receiver",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="upvotes",
+                        to="posts.post",
+                    ),
+                ),
+                (
+                    "sender",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="upvotes",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]
