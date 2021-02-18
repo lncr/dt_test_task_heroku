@@ -20,6 +20,6 @@ def debug_task(self):
 app.conf.beat_schedule = {
     'reset-upvotes': {
         'task': 'posts.tasks.reset_upvotes',
-        'schedule': crontab(minute=0, hour='24')
+        'schedule': crontab(minute=0, hour=0)
     }
 }
