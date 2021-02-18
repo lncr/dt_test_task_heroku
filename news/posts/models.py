@@ -6,7 +6,8 @@ User = get_user_model()
 
 
 class Post(models.Model):
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='posts', null=True)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL,
+                               related_name='posts', null=True)
     title = models.CharField(max_length=255)
     creation_date = models.DateTimeField(auto_now_add=True)
 
