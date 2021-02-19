@@ -29,7 +29,7 @@ class Comment(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.author.email} - {self.creation_date}"
+        return f"{self.author.username} - {self.creation_date}"
 
     class Meta:
         ordering = ("-id",)
