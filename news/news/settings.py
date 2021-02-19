@@ -9,10 +9,13 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
+import dj_database_url
 import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+import psycopg2
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -75,13 +78,13 @@ WSGI_APPLICATION = 'news.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+DATABASE_URL = os.environ['DATABASE_URL']
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.environ.get('DB_HOST'),
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASS'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -120,8 +123,8 @@ USE_TZ = True
 
 # CELERY STUFF
 
-CELERY_BROKER_URL = "redis://redis:6379"
-CELERY_RESULT_BACKEND = "redis://redis:6379"
+CELERY_BROKER_URL = "redis://:p32f8d3c4a53427dfce1c26783f7c62abd891f98aa0ef76c674e3b99db85b58dc@ec2-79-125-41-154.eu-west-1.compute.amazonaws.com:8039"
+CELERY_RESULT_BACKEND = "redis://:p32f8d3c4a53427dfce1c26783f7c62abd891f98aa0ef76c674e3b99db85b58dc@ec2-79-125-41-154.eu-west-1.compute.amazonaws.com:8039"
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
@@ -132,3 +135,8 @@ CELERY_TIMEZONE = 'Europe/London'
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# prod_db = dj_database_url.config(conn_max_age=500)
+# DATABASES['default'].update(prod_db)
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
